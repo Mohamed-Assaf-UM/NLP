@@ -765,3 +765,253 @@ Popular lemmatizers in NLTK:
 - **CoreNLP** and **TextBlob** also provide similar functionalities but with unique focuses.
 
 ---
+
+Let's break down how **Named Entity Recognition (NER)** works using the provided example and code snippet.
+
+---
+
+### **What is Named Entity Recognition (NER)?**
+- **NER** is a technique in NLP to identify and classify named entities in text into predefined categories such as:
+  - **Person**: Names of people (e.g., "Gustave Eiffel").
+  - **Organization**: Company or institution names (e.g., "Eiffel's company").
+  - **Location**: Geographical locations (e.g., "The Eiffel Tower").
+  - **Date/Time**: Temporal expressions (e.g., "1887 to 1889").
+  - **Other categories**: Such as monetary values, percentages, etc.
+
+---
+
+### **Steps in Your Code**
+
+#### **1. Tokenizing the Sentence**
+```python
+words = nltk.word_tokenize(sentence)
+```
+- Tokenization breaks the sentence into words:
+  ```
+  ['The', 'Eiffel', 'Tower', 'was', 'built', 'from', '1887', 'to', '1889', 'by', 'Gustave', 'Eiffel', ',', 'whose', 'company', 'specialized', 'in', 'building', 'metal', 'frameworks', 'and', 'structures', '.']
+  ```
+
+---
+
+#### **2. POS Tagging**
+```python
+tag_elements = nltk.pos_tag(words)
+```
+- Part-of-Speech tagging assigns grammatical labels to words:
+  ```
+  [('The', 'DT'), ('Eiffel', 'NNP'), ('Tower', 'NNP'), ('was', 'VBD'), ('built', 'VBN'),
+  ('from', 'IN'), ('1887', 'CD'), ('to', 'TO'), ('1889', 'CD'), ('by', 'IN'),
+  ('Gustave', 'NNP'), ('Eiffel', 'NNP'), (',', ','), ('whose', 'WP$'), 
+  ('company', 'NN'), ('specialized', 'VBD'), ('in', 'IN'), ('building', 'VBG'),
+  ('metal', 'JJ'), ('frameworks', 'NNS'), ('and', 'CC'), ('structures', 'NNS'), ('.', '.')]
+  ```
+  Here:
+  - `NNP` = Proper noun (e.g., "Eiffel", "Tower").
+  - `CD` = Cardinal number (e.g., "1887").
+  - `VBD` = Past tense verb (e.g., "was").
+
+---
+
+#### **3. Named Entity Recognition (NER)**
+```python
+nltk.ne_chunk(tag_elements).draw()
+```
+- **What happens internally:**
+  1. **POS-based Grouping**: The chunker groups adjacent tokens based on their POS tags. For example:
+     - `"Eiffel Tower"` → A named entity of type `Location`.
+     - `"Gustave Eiffel"` → A named entity of type `Person`.
+  2. **Pre-trained Classifier**: The `maxent_ne_chunker` uses a pre-trained model based on the **Maximum Entropy (MaxEnt)** algorithm, which identifies and classifies named entities by analyzing their context.
+  3. **Hierarchical Tree Structure**: The `ne_chunk()` function returns a tree representation where recognized named entities are labeled.
+
+---
+
+### **Visualization Using `.draw()**
+When `.draw()` is called, a graphical representation of the parse tree appears. You’ll see:
+- `PERSON` for names like "Gustave Eiffel".
+- `LOCATION` for places like "Eiffel Tower".
+- `DATE` for time periods like "1887 to 1889".
+
+---
+
+### **Output from NER**
+Based on the sentence:
+```plaintext
+The Eiffel Tower was built from 1887 to 1889 by Gustave Eiffel, whose company specialized in building metal frameworks and structures.
+```
+
+The named entities recognized would be:
+1. **LOCATION**: `Eiffel Tower`.
+2. **DATE**: `1887 to 1889`.
+3. **PERSON**: `Gustave Eiffel`.
+
+These entities will be grouped in the tree, making it easy to extract structured information.
+
+---
+
+### **Why NLTK for NER?**
+- NLTK offers pre-trained models and tools, like the `maxent_ne_chunker`, for educational and experimental purposes.
+- It's a library focused on simplicity and extensibility, allowing easy tokenization, POS tagging, and named entity recognition in a single pipeline.
+
+---
+
+### Summary of the Video: Introduction to NLP and Sentiment Analysis  
+
+**1. Overview and Recap**  
+- NLP topics discussed previously: Stemming, Lemmatization, Stopwords (using NLTK and Python).  
+- Objective: To understand how these concepts fit into the lifecycle of an NLP project.  
+
+**2. Problem Statement: Sentiment Analysis**  
+- The task: Sentiment analysis (classifying text as positive, negative, or neutral).  
+- Key terms explained:  
+  - **Corpus**: A collection of documents or sentences.  
+  - **Vocabulary**: Unique words in the corpus.  
+
+**3. Text Pre-Processing**  
+- **Text Pre-processing (Part 1):**  
+  1. **Tokenization**: Splitting a paragraph into sentences or sentences into words.  
+  2. **Lowercasing**: Converting all words to lowercase to avoid treating “The” and “the” as different words.  
+  3. **Regular Expressions**: Cleaning text by removing special characters or unwanted patterns.  
+
+- **Text Pre-processing (Part 2):**  
+  1. **Stemming**: Reducing words to their root form (e.g., "playing" → "play").  
+  2. **Lemmatization**: Reducing words to their dictionary form while maintaining meaning.  
+  3. **Stopwords**: Removing common words like "is," "the," and "and" that do not contribute to meaning.  
+
+**4. Converting Text into Vectors**  
+- After cleaning, text is transformed into numerical data for machine learning.  
+- Techniques:  
+  1. **One-Hot Encoding**: Represents words as binary vectors (e.g., "food" → `[0, 1, 0, 0]`).  
+  2. **Bag of Words (BoW)**: Counts the frequency of words in a text.  
+  3. **TF-IDF (Term Frequency-Inverse Document Frequency)**: Weighs words based on importance in the document and corpus.  
+  4. **Word2Vec**: Creates meaningful vector representations of words based on context.  
+  5. **Average Word2Vec**: Aggregates word vectors for entire sentences or documents.  
+
+**5. Training Machine Learning Models**  
+- Steps:  
+  1. Convert text into vectors.  
+  2. Use numerical vectors as input to machine learning models.  
+  3. Train models to classify sentiments using algorithms (ML or DL).  
+
+**6. Future Topics**  
+- Deep Learning Techniques: Word Embeddings, Transformers, and BERT.  
+- Libraries: **Gensim** for implementing Word2Vec.  
+
+### Flow of Sentiment Analysis Workflow  
+1. **Data Preparation**: Collect and preprocess text.  
+2. **Text Pre-processing**: Tokenization, lowercasing, stemming, lemmatization, removing stopwords, cleaning.  
+3. **Feature Extraction**: Convert text into vectors using methods like BoW, TF-IDF, or Word2Vec.  
+4. **Model Training**: Train ML algorithms with vectorized text.  
+5. **Prediction and Evaluation**: Use the model to classify sentiments and evaluate accuracy.  
+
+---
+
+### **Continuing the Discussion on NLP**
+
+After **text preprocessing**, where we performed tasks like:
+1. **Stemming**: Reducing words to their root form (e.g., "running" → "run").
+2. **Lemmatization**: Converting words to their base dictionary form (e.g., "better" → "good").
+3. **Removing stop words**: Eliminating common but less meaningful words (e.g., "is", "the", "and").
+
+The next step is to convert **text into vectors** (numerical representations), a critical step because machine learning models only work with numbers, not text.
+
+---
+
+### **Understanding One-Hot Encoding**
+One-hot encoding is the simplest method to convert text into vectors.
+
+---
+
+#### **Steps in One-Hot Encoding**
+
+1. **Find Unique Words (Vocabulary)**
+   - Combine all sentences or documents into a single **corpus**.
+   - Extract the **unique words** (vocabulary) from the corpus.
+
+   **Example Corpus**:
+   ```
+   D1: "The food is good"
+   D2: "The food is bad"
+   D3: "Pizza is amazing"
+   ```
+   Combine the documents:  
+   **"The food is good. The food is bad. Pizza is amazing."**
+
+   **Vocabulary**:
+   ```
+   ['the', 'food', 'is', 'good', 'bad', 'pizza', 'amazing']
+   ```
+   Total unique words: **7**.
+
+---
+
+2. **Create One-Hot Vectors**
+   - Each word in the vocabulary is assigned a unique position in a vector of length equal to the vocabulary size.
+   - For a word, the position corresponding to it is marked as `1`, and all others are `0`.
+
+   **Example Representation**:
+   - "the": `[1, 0, 0, 0, 0, 0, 0]`
+   - "food": `[0, 1, 0, 0, 0, 0, 0]`
+   - "is": `[0, 0, 1, 0, 0, 0, 0]`
+   - "good": `[0, 0, 0, 1, 0, 0, 0]`
+   - "bad": `[0, 0, 0, 0, 1, 0, 0]`
+   - "pizza": `[0, 0, 0, 0, 0, 1, 0]`
+   - "amazing": `[0, 0, 0, 0, 0, 0, 1]`
+
+---
+
+3. **Encode Entire Sentences**
+   - For each sentence, represent each word using its one-hot vector.
+   - Combine the vectors for all words in the sentence.
+
+   **Example for Sentence D1 ("The food is good")**:
+   - "the" → `[1, 0, 0, 0, 0, 0, 0]`
+   - "food" → `[0, 1, 0, 0, 0, 0, 0]`
+   - "is" → `[0, 0, 1, 0, 0, 0, 0]`
+   - "good" → `[0, 0, 0, 1, 0, 0, 0]`
+
+   Combined Representation:
+   ```
+   [
+     [1, 0, 0, 0, 0, 0, 0],  # "the"
+     [0, 1, 0, 0, 0, 0, 0],  # "food"
+     [0, 0, 1, 0, 0, 0, 0],  # "is"
+     [0, 0, 0, 1, 0, 0, 0]   # "good"
+   ]
+   ```
+   **Shape**: `4 x 7` (4 words × 7 unique vocabulary).
+
+   **Example for D2 ("The food is bad")**:
+   ```
+   [
+     [1, 0, 0, 0, 0, 0, 0],  # "the"
+     [0, 1, 0, 0, 0, 0, 0],  # "food"
+     [0, 0, 1, 0, 0, 0, 0],  # "is"
+     [0, 0, 0, 0, 1, 0, 0]   # "bad"
+   ]
+   ```
+   **Shape**: `4 x 7`.
+
+---
+
+### **Key Points**
+1. **Vector Dimensions**: The vector size is equal to the number of unique words (vocabulary size).
+2. **Sparse Representation**: Most elements in the vector are `0`, leading to inefficient storage.
+
+---
+
+### **Limitations of One-Hot Encoding**
+1. **No Semantic Understanding**: Words like "good" and "amazing" are treated as completely unrelated, even though they are similar in meaning.
+2. **High Dimensionality**: For large vocabularies, the vector size becomes enormous, making computations expensive.
+3. **Context Ignorance**: Words are encoded independently, ignoring their context in a sentence.
+
+---
+
+### **What’s Next?**
+- More advanced techniques like:
+  1. **Bag of Words (BoW)**.
+  2. **TF-IDF** (Term Frequency-Inverse Document Frequency).
+  3. **Word Embeddings** (e.g., Word2Vec, GloVe).
+  
+  These methods address the limitations of one-hot encoding by considering word frequencies, importance, and context.
+
+---
