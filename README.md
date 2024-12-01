@@ -1496,6 +1496,144 @@ Doc2: The dog sat on the log.
 
 ---
 
+### **Notes on Word Embeddings for NLP**
+
+#### **What Are Word Embeddings?**
+Word embeddings are a method in **natural language processing (NLP)** for representing words as dense, real-valued vectors. These vectors capture semantic meaning, such that:
+- Words with similar meanings (e.g., "happy" and "excited") are closer in vector space.
+- Opposite words (e.g., "happy" and "angry") are farther apart.
+
+#### **Definition**
+From Wikipedia:
+> Word embedding is a representation of words for text analysis, typically in the form of real-valued vectors, where similar words are closer in the vector space.
+
+---
+
+#### **Example Explanation**
+Imagine three words: **happy**, **excited**, and **angry**:
+- Using word embeddings, we convert each word into a numerical vector.
+- When plotted (e.g., using dimensionality reduction techniques like PCA), similar words like **happy** and **excited** are close, while an opposite word like **angry** is far away.
+
+---
+
+#### **Types of Word Embedding Techniques**
+Word embedding techniques are divided into **two categories**:
+
+1. **Count/Frequency-Based Approaches**:
+   These rely on word occurrences or co-occurrences and include:
+   - **One-Hot Encoding**:
+     - Converts each word into a binary vector.
+     - Disadvantage: Results in large, sparse matrices.
+   - **Bag of Words (BoW)**:
+     - Counts word occurrences in a document.
+     - Disadvantage: Ignores word order and context.
+   - **TF-IDF (Term Frequency-Inverse Document Frequency)**:
+     - Weights words based on importance in the document.
+     - Disadvantage: Still results in sparse matrices and lacks semantic meaning.
+
+2. **Deep Learning-Based Models**:
+   These models create **dense, meaningful embeddings** and solve the drawbacks of traditional techniques. Key methods:
+   - **Word2Vec**:
+     - Efficiently converts words into dense vectors.
+     - Maintains semantic meaning.
+     - Addresses sparsity issues.
+   - **FastText, GloVe** (to be discussed later).
+
+---
+
+#### **Word2Vec**
+Word2Vec is a **deep learning-based word embedding model** with two training techniques:
+1. **Continuous Bag of Words (CBOW)**:
+   - Predicts a target word based on its context (surrounding words).
+   - Example: For the sentence *"The cat sat on the mat"*, the model predicts **"sat"** using the words *"The," "cat," "on," "the," "mat."*
+
+2. **Skip-Gram**:
+   - Predicts the context words given a target word.
+   - Example: For the word **"sat"**, the model predicts the words *"The," "cat," "on," "the," "mat."*
+
+---
+
+#### **Advantages of Deep Learning-Based Word Embeddings**
+1. **Dense Representations**: Unlike sparse matrices in BoW or TF-IDF, Word2Vec produces compact vector representations.
+2. **Captures Semantic Meaning**: Words with similar meanings are closer in the vector space.
+3. **Handles Sparsity**: No large, sparse matrices like in one-hot encoding or BoW.
+4. **Pre-trained Models**: Word2Vec models trained on large datasets (e.g., Google's 1.5GB model) can be used for better results.
+
+---
+
+#### **Next Steps**
+In the upcoming discussions:
+1. Dive deeper into **Word2Vec** and its architectures (**CBOW** and **Skip-Gram**).
+2. Explore **pre-trained models** for real-world applications.
+3. Compare Word2Vec with newer models like **GloVe** and **FastText**.
+
+---
+
+Sure! Here's a concise explanation of Word2Vec with examples:
+
+---
+
+### **What is Word2Vec?**
+Word2Vec is a technique used in Natural Language Processing (NLP) to represent words as vectors in a continuous vector space. It captures the semantic and syntactic relationships between words by training a neural network on a large corpus of text.
+
+---
+
+### **Key Concepts**
+
+1. **Word Embedding**: Each word is mapped to a vector (list of numbers) in a high-dimensional space. Similar words have vectors that are close to each other.
+
+2. **Feature Representation**: Words are represented by numerical values based on features like **gender**, **royalty**, or **age** (though actual features are learned automatically in Word2Vec).
+
+---
+
+### **Example:**
+
+#### Vocabulary:  
+- **boy**, **girl**, **king**, **queen**, **apple**, **mango**  
+
+#### Feature Space:  
+- Gender, Royalty, Age, Food, etc.
+
+| **Word** | **Gender** | **Royalty** | **Age** | **Food** | ... |
+|----------|------------|-------------|---------|----------|-----|
+| Boy      | -1         | 0.01        | 0.03    | 0.00     | ... |
+| Girl     | +1         | 0.02        | 0.02    | 0.00     | ... |
+| King     | -0.92      | +0.95       | 0.75    | 0.00     | ... |
+| Queen    | +0.93      | +0.96       | 0.68    | 0.00     | ... |
+| Apple    | 0.00       | 0.00        | 0.10    | +0.91    | ... |
+| Mango    | 0.00       | 0.00        | 0.08    | +0.92    | ... |
+
+---
+
+### **Vector Operations**
+
+Word2Vec allows arithmetic with word vectors to find relationships:
+
+#### Example 1:  
+- \( \text{King} - \text{Man} + \text{Woman} \approx \text{Queen} \)
+
+#### Example 2:  
+- \( \text{Boy} + \text{Royalty} \approx \text{Prince} \)
+
+---
+
+### **Cosine Similarity**
+To find how similar two words are, we calculate the **cosine similarity** of their vectors:
+- **Closer vectors → More similar words**  
+- Example:  
+  - \( \text{Similarity(King, Queen)} > \text{Similarity(King, Apple)} \)
+
+---
+
+### **Real-world Use Cases**:
+1. **Synonym Detection**: "Man" and "Boy" have similar vectors.
+2. **Recommendation Systems**: Movies like *Iron Man* and *Avengers* have similar embeddings.
+3. **Analogies**: Solve questions like *"Paris is to France as Berlin is to?"*
+
+---
+
+Word2Vec simplifies sparse representations (like Bag of Words) into meaningful, dense embeddings that help in deeper NLP tasks like machine translation, sentiment analysis, and more.
+
 ### **Why TF-IDF?**
 1. **Ignores Common Words**: Words like "the", "is" have low importance due to low IDF.
 2. **Highlights Relevant Words**: Rare words like "cat" and "dog" get higher scores, making them useful for classification or clustering.
@@ -1693,5 +1831,306 @@ For the **example dataset**, the TF-IDF matrix might look like this:
 
 ### **Final Output**
 The final matrix `X` contains these scores, representing each message numerically. This can now be fed into machine learning models for spam classification!
+
+---
+### **Notes on Word Embeddings for NLP**
+
+#### **What Are Word Embeddings?**
+Word embeddings are a method in **natural language processing (NLP)** for representing words as dense, real-valued vectors. These vectors capture semantic meaning, such that:
+- Words with similar meanings (e.g., "happy" and "excited") are closer in vector space.
+- Opposite words (e.g., "happy" and "angry") are farther apart.
+
+#### **Definition**
+From Wikipedia:
+> Word embedding is a representation of words for text analysis, typically in the form of real-valued vectors, where similar words are closer in the vector space.
+
+---
+
+#### **Example Explanation**
+Imagine three words: **happy**, **excited**, and **angry**:
+- Using word embeddings, we convert each word into a numerical vector.
+- When plotted (e.g., using dimensionality reduction techniques like PCA), similar words like **happy** and **excited** are close, while an opposite word like **angry** is far away.
+
+---
+
+#### **Types of Word Embedding Techniques**
+Word embedding techniques are divided into **two categories**:
+
+1. **Count/Frequency-Based Approaches**:
+   These rely on word occurrences or co-occurrences and include:
+   - **One-Hot Encoding**:
+     - Converts each word into a binary vector.
+     - Disadvantage: Results in large, sparse matrices.
+   - **Bag of Words (BoW)**:
+     - Counts word occurrences in a document.
+     - Disadvantage: Ignores word order and context.
+   - **TF-IDF (Term Frequency-Inverse Document Frequency)**:
+     - Weights words based on importance in the document.
+     - Disadvantage: Still results in sparse matrices and lacks semantic meaning.
+
+2. **Deep Learning-Based Models**:
+   These models create **dense, meaningful embeddings** and solve the drawbacks of traditional techniques. Key methods:
+   - **Word2Vec**:
+     - Efficiently converts words into dense vectors.
+     - Maintains semantic meaning.
+     - Addresses sparsity issues.
+   - **FastText, GloVe** (to be discussed later).
+
+---
+
+#### **Word2Vec**
+Word2Vec is a **deep learning-based word embedding model** with two training techniques:
+1. **Continuous Bag of Words (CBOW)**:
+   - Predicts a target word based on its context (surrounding words).
+   - Example: For the sentence *"The cat sat on the mat"*, the model predicts **"sat"** using the words *"The," "cat," "on," "the," "mat."*
+
+2. **Skip-Gram**:
+   - Predicts the context words given a target word.
+   - Example: For the word **"sat"**, the model predicts the words *"The," "cat," "on," "the," "mat."*
+
+---
+
+#### **Advantages of Deep Learning-Based Word Embeddings**
+1. **Dense Representations**: Unlike sparse matrices in BoW or TF-IDF, Word2Vec produces compact vector representations.
+2. **Captures Semantic Meaning**: Words with similar meanings are closer in the vector space.
+3. **Handles Sparsity**: No large, sparse matrices like in one-hot encoding or BoW.
+4. **Pre-trained Models**: Word2Vec models trained on large datasets (e.g., Google's 1.5GB model) can be used for better results.
+
+---
+
+#### **Next Steps**
+In the upcoming discussions:
+1. Dive deeper into **Word2Vec** and its architectures (**CBOW** and **Skip-Gram**).
+2. Explore **pre-trained models** for real-world applications.
+3. Compare Word2Vec with newer models like **GloVe** and **FastText**.
+
+---
+
+### **1. Word2Vec Overview**
+
+**Word2Vec** is a technique used to represent words in a **numerical format** so that computers can understand the meaning and relationships between words in a text. It learns these representations by analyzing a large text corpus (a collection of texts). There are two primary methods for training Word2Vec models:
+
+- **Skip-Gram model**
+- **Continuous Bag of Words (CBOW)**
+
+In both methods, Word2Vec works by taking words in context and learning how they are related to each other. Now, let’s dive into **CBOW (Continuous Bag of Words)** first since you're asking for intuition on that!
+
+---
+![image](https://github.com/user-attachments/assets/dcd954b5-c762-46d4-9436-eb5271d9181c)
+
+### **2. Continuous Bag of Words (CBOW)**
+
+In **CBOW**, the goal is to predict the target word (the word in the middle) based on the **context words** (the surrounding words).
+
+#### **Example:**
+Consider the sentence:  
+*"The cat sat on the mat."*
+
+If we choose the target word to be "sat," then the context words would be "the," "cat," "on," "the," and "mat." CBOW would try to predict the word "sat" based on these context words. 
+
+- **Context words**: ["the", "cat", "on", "the", "mat"]
+- **Target word**: "sat"
+
+The model works by **looking at the surrounding words (context)** and trying to predict the middle word (target word). 
+
+- **Why is it called a Bag of Words?**  
+  It’s because the model doesn’t care about the order of the words. It just looks at the surrounding words and ignores the sequence in which they appear. It’s like having a "bag" of words where the order doesn’t matter.
+
+#### **How CBOW Works:**
+1. The context words are passed through the model.
+2. The model tries to predict the center word using the context.
+3. After many iterations over the text, the model learns to associate words that tend to appear together in similar contexts, and as a result, it can represent words as **vectors** (numbers).
+
+---
+
+### **3. Word2Vec - Intuition Behind the Vectors**
+
+In **Word2Vec**, each word is represented as a vector in a **multi-dimensional space**. The idea is that words with similar meanings or that often appear in similar contexts will have **similar vectors**.
+
+#### **Example of Word Vectors**:  
+Let’s take two words: "king" and "queen."  
+- If you visualize the vector space, these two words will have vectors that are closer together because they are often used in similar contexts. For example, "king" and "queen" might often appear in similar contexts related to royalty, leadership, etc.
+
+What makes Word2Vec interesting is that it can **learn relationships** between words. For instance, it can understand that the relationship between "king" and "queen" is similar to the relationship between "man" and "woman." The model captures such relationships mathematically, like:
+
+- **king - man + woman = queen**  
+This relationship can be captured by the **vector arithmetic** of the words.
+
+---
+
+### **4. How does this differ from the traditional Bag of Words (BoW)?**
+
+In **Bag of Words (BoW)**, words are represented as individual features without any notion of their relationships with other words. For example, in BoW, every word in a document is treated as a **separate feature**, and the order of words doesn't matter. 
+
+#### **Example of BoW:**
+
+- Sentence: *“The cat sat on the mat.”*
+- BoW representation might look like:
+  - "the" → 1
+  - "cat" → 1
+  - "sat" → 1
+  - "on" → 1
+  - "mat" → 1
+
+The issue with BoW is that it **ignores the context**. For example, "cat" and "dog" may not be closely related in a BoW model, but they could be related in Word2Vec since both might appear in similar contexts. Word2Vec captures the **semantic meaning** and **context** of words, making it much more powerful.
+
+---
+
+### **5. Intuition with a Real-Time Example**
+
+Let’s imagine you're building a **movie recommendation system** using Word2Vec.
+
+- You have a list of movie titles like "The Lion King," "The Jungle Book," "Aladdin," "Beauty and the Beast," etc.
+- By applying Word2Vec, you can analyze the context in which these words (movie titles) appear, and the model will learn relationships such as:
+  - "The Lion King" and "The Jungle Book" are more related than "The Lion King" and "Titanic."
+  - Similarly, "Beauty and the Beast" and "Aladdin" might be closer than "Beauty and the Beast" and "The Godfather."
+
+This relationship is useful because now you can recommend movies to a user based on similarity. If they like "The Lion King," they might also like "The Jungle Book" because these movies have similar context or themes (both are animated, feature animals, etc.).
+
+---
+
+### **6. Why Use Word2Vec?**
+
+1. **Captures Context**: Word2Vec doesn’t just see words as isolated entities. It understands how they are used in sentences, so it can **learn relationships** and **synonyms** between words.
+2. **Reduces Dimensionality**: It’s a more compact way of representing words compared to BoW, making it more efficient.
+3. **Improves Performance**: Models that use Word2Vec (like classifiers or recommendation systems) tend to perform better because the vectors capture richer, more meaningful information.
+
+---
+
+### **In Summary:**
+- **CBOW (Continuous Bag of Words)** tries to predict a word (target) based on its context (surrounding words).
+- Word2Vec, through CBOW, learns a **vector** (a list of numbers) for each word.
+- These vectors help capture **semantic meanings** and **relationships** between words (e.g., "king" - "man" + "woman" = "queen").
+- Word2Vec is more advanced than the traditional **Bag of Words** model because it understands the **context** in which words are used.
+
+---
+
+### **ANNs (Artificial Neural Networks)**
+
+Artificial Neural Networks (ANNs) are algorithms designed to recognize patterns. They are inspired by how the human brain works, with neurons and connections.
+
+- **Neurons**: They are simple units that take inputs, process them, and produce an output.
+- **Layers**: ANNs are composed of layers of neurons. The input layer receives the data, and the output layer produces the result. Hidden layers process the data between input and output layers.
+
+In simple terms:
+- **Input Layer**: Receives information (like images or text).
+- **Hidden Layer(s)**: Process the information and try to understand the patterns.
+- **Output Layer**: Gives the final decision or prediction.
+
+ANNs work by adjusting the "weights" of the connections between neurons so that the network can make better predictions.
+
+---
+Sure! Let's dive into **Skip-Gram** and break it down step by step. Skip-Gram is another method used in **Word2Vec**, and it's a bit different from **Continuous Bag of Words (CBOW)**, which we discussed earlier.
+
+### **Skip-Gram Model Overview**
+
+In the **Skip-Gram model**, the idea is **to predict the context words** (surrounding words) based on a given **target word**. It works in reverse to CBOW, where CBOW tries to predict the target word based on the context.
+
+In simple terms:
+- **CBOW**: Predict the center word using the surrounding context words.
+- **Skip-Gram**: Predict the context words using the center word.
+
+So, if you have a sentence, and you choose a word in the middle, the model will try to predict the words around it.
+
+### **Intuition Behind Skip-Gram**
+
+The Skip-Gram model works by using a **single target word** and trying to predict the **surrounding context words**. The Skip-Gram model is useful when you're working with a large corpus of text, and you're trying to **learn relationships between words**.
+
+---
+
+### **Example of Skip-Gram**
+
+Let’s consider the following sentence:
+
+**"The cat sat on the mat."**
+
+If we choose **"sat"** as the target word, the Skip-Gram model will try to predict the surrounding context words like:
+
+- **Context words**: ["the", "cat", "on", "the", "mat"]
+- **Target word**: "sat"
+
+So, in this case, the Skip-Gram model tries to predict the words around "sat" by training on pairs like:
+
+- (sat, the)
+- (sat, cat)
+- (sat, on)
+- (sat, the)
+- (sat, mat)
+
+This way, by using **"sat"** as the center word, the Skip-Gram model will learn that **"sat"** is closely related to **"the," "cat," "on,"** and **"mat"** based on their co-occurrence in the same context.
+
+---
+
+### **How Does Skip-Gram Work?**
+
+1. **Choose a Target Word**: In the sentence, pick a word (target word).
+2. **Define a Window Size**: The window size tells you how many words around the target word you should consider. For example, a window size of 2 means the two words before and after the target word are considered as the context.
+3. **Generate Context-Target Pairs**: For the given target word, generate context-target word pairs.
+4. **Train the Model**: The model is trained by trying to predict the context words based on the target word. Over time, the model adjusts the weights (vector representations) of words based on the context they appear in.
+
+---
+
+### **Skip-Gram with a Real Example**
+
+Let’s take a simple example:
+
+**Sentence:** "I love machine learning."
+
+Let’s say we choose the target word to be "love" and set a **window size** of 1. The context words are the ones that are **1 word before** or **1 word after** "love."
+
+- Target Word: **love**
+- Context Words: **[I, machine]**
+
+Now, Skip-Gram will try to predict these context words using the target word "love." Here’s what the pairs would look like:
+
+- (love, I)
+- (love, machine)
+
+If we increase the window size, say to 2, the context words would be:
+
+- Target Word: **love**
+- Context Words: **[I, machine, learning]**
+
+And the pairs would be:
+
+- (love, I)
+- (love, machine)
+- (love, learning)
+
+In the Skip-Gram model, the goal is to predict all these context words based on the center word (target word). This process is repeated across the entire corpus of text, and the model learns to create vector representations for words that capture their relationships to other words.
+
+---
+
+### **Skip-Gram vs. CBOW**
+
+- **CBOW**: The model predicts the target word based on the surrounding context words. It is faster and works well for small datasets.
+- **Skip-Gram**: The model predicts the surrounding context words based on the target word. It works better with larger datasets and is useful when you want to capture rare words and their contexts better.
+
+### **Key Advantages of Skip-Gram**
+
+1. **Captures Rich Relationships**: Skip-Gram learns relationships between words by analyzing the context in which they appear. For example, it can learn that "cat" and "dog" often appear in similar contexts and should have similar vector representations.
+2. **Works Well for Large Datasets**: Skip-Gram tends to perform well with larger text corpora, especially when you have a lot of rare or less frequent words.
+3. **Better for Rare Words**: Skip-Gram is particularly good at predicting rare words because it generates multiple context-target pairs for a single target word.
+
+---
+
+### **Summary of the Skip-Gram Model**
+
+- **Objective**: Predict context words from the target word.
+- **Process**: 
+  - Take a sentence and pick a target word.
+  - Define a window size (number of words before and after the target word).
+  - Generate context-target pairs and train the model to predict the context words.
+- **Output**: Learn vector representations (embeddings) for each word based on its context in the text.
+
+By the end of training, you’ll have a set of word vectors where words with similar meanings or relationships are located close to each other in the vector space.
+
+---
+
+### **Real-Life Application of Skip-Gram**
+
+Imagine you are building a **chatbot** or **search engine**. If you use Skip-Gram to train your model on a large collection of texts (like conversation logs, books, or articles), the model will learn the relationships between words. As a result, you can use these word vectors to find similar words or phrases and improve the chatbot’s ability to understand and respond to queries.
+
+For example, if a user asks a question about "weather," the model might find related words like "forecast," "temperature," and "rain" by looking at the context of the words in the trained vectors.
 
 ---
