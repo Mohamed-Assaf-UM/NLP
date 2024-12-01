@@ -1259,3 +1259,205 @@ Each row corresponds to a message, and each column corresponds to a word from th
    - Converted each message into a numerical vector based on the presence/absence of words.
 
 ---
+
+### Simplified Explanation of N-grams
+
+N-grams are a technique in **Natural Language Processing (NLP)** used to represent text in a way that captures the context of words by considering their combinations in a sequence.
+
+---
+
+### **Key Concepts from the Explanation**
+
+1. **The Problem with Bag of Words**:
+   - The **Bag of Words (BoW)** model treats sentences as collections of individual words, ignoring their sequence.
+   - Example:
+     - Sentence 1: "The food is good."
+     - Sentence 2: "The food is not good."
+   - BoW will consider both sentences almost identical except for the word "not," even though they convey opposite meanings.
+
+2. **How N-grams Solve This**:
+   - N-grams capture sequences of *n* consecutive words in a text.
+   - By including word combinations, the context of the sentence improves.
+     - **Bigram (n=2)**: Looks at pairs of consecutive words like *"food is"* or *"not good."*
+     - **Trigram (n=3)**: Looks at triplets like *"food is good"* or *"food not good."*
+
+---
+
+### **Example Walkthrough**
+#### Sentences:
+1. "The food is good."
+2. "The food is not good."
+
+#### Vocabulary from Words (Unigram):
+After stopword removal (`the`, `is` are removed):
+- Vocabulary: `['food', 'not', 'good']`
+
+BoW representation:
+| **food** | **not** | **good** |
+|----------|----------|----------|
+| 1        | 0        | 1        | *(Sentence 1)*  
+| 1        | 1        | 1        | *(Sentence 2)*  
+
+**Problem**: The vectors are almost the same except for "not," failing to capture the opposing sentiment.
+
+---
+
+#### Vocabulary from Bigrams (n=2):
+Bigram vocabulary:  
+`['food good', 'food not', 'not good']`
+
+Representation:
+| **food good** | **food not** | **not good** |
+|---------------|--------------|--------------|
+| 1             | 0            | 0            | *(Sentence 1)*  
+| 0             | 1            | 1            | *(Sentence 2)*  
+
+**Advantage**: The vectors now clearly distinguish the two sentences.
+
+---
+
+#### Vocabulary from Trigrams (n=3):
+Trigram vocabulary:
+`['food is good', 'food is not', 'is not good']`
+
+Representation:
+| **food is good** | **food is not** | **is not good** |
+|------------------|-----------------|-----------------|
+| 1                | 0               | 0               | *(Sentence 1)*  
+| 0                | 1               | 1               | *(Sentence 2)*  
+
+**Advantage**: Even more context is captured compared to bigrams.
+
+---
+
+### **Practical N-gram Use in Scikit-learn**
+In Scikit-learn's `CountVectorizer`:
+- `ngram_range=(1, 1)`: Only unigram (single words).
+- `ngram_range=(1, 2)`: Combination of unigram and bigram.
+- `ngram_range=(2, 3)`: Combination of bigram and trigram.
+
+Example code:
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+
+corpus = ["The food is good", "The food is not good"]
+
+# Unigram and Bigram
+vectorizer = CountVectorizer(ngram_range=(1, 2), stop_words='english')
+X = vectorizer.fit_transform(corpus)
+
+print(vectorizer.get_feature_names_out())  # Display vocabulary
+print(X.toarray())  # Display vectorized representation
+```
+
+---
+
+### **Summary**
+1. **N-grams** enhance context by capturing word sequences.
+2. **Applications**:
+   - Sentiment analysis.
+   - Text classification.
+   - Contextual understanding of sentences.
+3. N-grams are a powerful way to improve upon traditional BoW models by considering the relationships between words in a sentence.
+### Practical Example: Using N-grams with `ngram_range=(2,3)`
+
+In this example, we extend the **Bag of Words (BoW)** model by including **bigrams (n=2)** and **trigrams (n=3)**. Here's how it works:
+
+---
+
+### **Key Steps in the Code**
+
+#### 1. **Setup the CountVectorizer**
+- **`ngram_range=(2, 3)`**:
+  - Includes **bigrams** (combinations of 2 consecutive words) and **trigrams** (combinations of 3 consecutive words).
+- **`max_features=100`**:
+  - Limits the number of features (vocabulary) to 100 most frequent terms.
+- **`binary=True`**:
+  - Creates a binary vector where each value is 1 if the n-gram is present, 0 otherwise.
+
+#### 2. **Transforming the Corpus**
+The `fit_transform()` method:
+- Extracts bigrams and trigrams from the `corpus`.
+- Converts the text into a vectorized representation.
+
+---
+
+### **Simplified Example**
+
+#### Corpus:
+```python
+corpus = [
+    "The food is good",
+    "The food is not good",
+    "Food quality is not bad"
+]
+```
+
+#### **N-grams with `ngram_range=(2,3)`**
+
+1. **Bigrams (n=2)**:
+   - Example: `"The food"`, `"food is"`, `"is good"`, `"food not"`, `"not bad"`
+
+2. **Trigrams (n=3)**:
+   - Example: `"The food is"`, `"food is good"`, `"is not bad"`
+
+---
+
+#### **Code Implementation**:
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Create CountVectorizer with bigrams and trigrams
+cv = CountVectorizer(max_features=100, binary=True, ngram_range=(2, 3))
+X = cv.fit_transform(corpus).toarray()
+
+# Vocabulary (n-grams extracted)
+print("Vocabulary:\n", cv.vocabulary_)
+
+# Vectorized representation of the corpus
+print("\nVectorized Corpus:\n", X)
+```
+
+---
+
+#### **Output Explanation**
+
+**Vocabulary (Extracted N-grams):**
+- The `cv.vocabulary_` gives the mapping of n-grams to their index in the vector:
+  ```
+  {
+    'food is': 0,
+    'food is good': 1,
+    'food is not': 2,
+    'is not': 3,
+    'is not bad': 4,
+    'not bad': 5,
+    'not good': 6
+  }
+  ```
+
+**Vectorized Corpus:**
+Each row corresponds to a sentence, and each column corresponds to an n-gram:
+- **Matrix (X):**
+  ```
+  [[1 1 0 0 0 0 0]   # "The food is good"
+   [1 0 1 0 0 0 1]   # "The food is not good"
+   [0 0 1 1 1 1 0]]  # "Food quality is not bad"
+  ```
+
+---
+
+### **How N-grams Improve Context**
+1. **Capturing Relationships**:
+   - With bigrams and trigrams, the model learns relationships between consecutive words (e.g., "not good" vs. "is not").
+2. **Better Differentiation**:
+   - The n-gram representation distinguishes "The food is good" from "The food is not good" by identifying meaningful word sequences like "not good."
+
+---
+
+### **Summary**
+- **`ngram_range=(2,3)`** extracts bigrams and trigrams to improve the contextual understanding of the corpus.
+- Bigrams capture two-word combinations, and trigrams capture three-word combinations.
+- This approach addresses limitations of simple Bag of Words by incorporating word order and relationships into the feature set.
+---
+  
