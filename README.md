@@ -1461,3 +1461,237 @@ Each row corresponds to a sentence, and each column corresponds to an n-gram:
 - This approach addresses limitations of simple Bag of Words by incorporating word order and relationships into the feature set.
 ---
   
+### **TF-IDF (Term Frequency-Inverse Document Frequency)**
+
+TF-IDF is a statistical measure used to evaluate the importance of a word in a document relative to a collection of documents (corpus). It combines **two concepts:**
+
+---
+
+![image](https://github.com/user-attachments/assets/b1356c3a-81f1-4567-9e0e-696786312f2c)
+
+
+---
+
+![image](https://github.com/user-attachments/assets/6bcd2e99-dd48-46c2-a3e7-88a71d800f7f)
+
+---
+
+![image](https://github.com/user-attachments/assets/faca96f0-4413-4d75-af3f-0fc4da3bb0d7)
+
+
+---
+
+### **Example**
+
+#### Corpus:
+```text
+Doc1: The cat sat on the mat.  
+Doc2: The dog sat on the log.
+```
+
+![image](https://github.com/user-attachments/assets/23681a4e-9c68-4c5d-aa55-40374a48718f)
+
+![image](https://github.com/user-attachments/assets/40aea5e4-f124-4b96-8d48-d828caf035c2)
+
+
+---
+
+### **Why TF-IDF?**
+1. **Ignores Common Words**: Words like "the", "is" have low importance due to low IDF.
+2. **Highlights Relevant Words**: Rare words like "cat" and "dog" get higher scores, making them useful for classification or clustering.
+
+---
+
+### **Implementation in Python**
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Example corpus
+corpus = [
+    "The cat sat on the mat",
+    "The dog sat on the log"
+]
+
+# TF-IDF vectorizer
+tfidf = TfidfVectorizer()
+X = tfidf.fit_transform(corpus)
+
+# Vocabulary and TF-IDF matrix
+print("Vocabulary:\n", tfidf.vocabulary_)
+print("\nTF-IDF Matrix:\n", X.toarray())
+```
+
+---
+
+### **Output Example**
+**Vocabulary:**  
+```python
+{'cat': 0, 'sat': 1, 'on': 2, 'the': 3, 'mat': 4, 'dog': 5, 'log': 6}
+```
+
+**TF-IDF Matrix:**  
+![image](https://github.com/user-attachments/assets/6585a6fc-6dc1-483f-89c8-98338ee97a56)
+
+---
+
+### **Summary**
+- **TF-IDF** highlights important words by balancing frequency in a document (TF) with rarity across documents (IDF).
+- Useful in text-based applications like **search engines**, **recommendation systems**, and **document clustering**.
+---
+
+### **Advantages of TF-IDF**  
+
+1. **Highlights Important Words**:  
+   - Assigns higher importance to rare and meaningful words in a document while ignoring common ones like "the" or "is."  
+
+2. **Easy to Implement**:  
+   - Straightforward to compute using libraries like `sklearn`.  
+
+3. **Good for Small to Medium-Sized Datasets**:  
+   - Performs well when the dataset is not excessively large.  
+
+4. **Captures Context (to Some Extent)**:  
+   - Combines term frequency and inverse document frequency, making it better than raw counts.  
+
+5. **Customizable**:  
+   - You can fine-tune parameters (e.g., `ngram_range`, `max_features`) to fit specific use cases.  
+
+---
+
+### **Disadvantages of TF-IDF**  
+
+1. **Ignores Word Order and Context**:  
+   - Does not consider the order of words or relationships between them (e.g., “not good” and “good” are treated similarly).  
+
+2. **Fails for Long or Dynamic Texts**:  
+   - Not ideal for documents with evolving vocabulary, like live tweets or forums.  
+
+3. **Sparse Representation**:  
+   - The resulting matrix is often large and sparse, consuming significant memory for large corpora.  
+
+4. **Static Vocabulary**:  
+   - New words in unseen documents will not have a corresponding vector, leading to limitations in real-world applications.  
+
+5. **Not Semantic**:  
+   - TF-IDF focuses only on term frequency and rarity; it does not understand the meaning of words or handle synonyms effectively.  
+
+6. **Struggles with Polysemy and Homonymy**:  
+   - Words with multiple meanings or the same spelling but different contexts are treated the same.  
+
+---
+
+### **When to Use TF-IDF?**
+- Use TF-IDF for text classification, clustering, and information retrieval tasks when:  
+  - The dataset is relatively small.  
+  - Simple word importance is sufficient without the need for deeper semantic understanding (e.g., search engines, topic modeling).  
+
+---
+
+### **When Not to Use TF-IDF?**
+- Avoid TF-IDF if:  
+  - Your data is very large and dynamic (consider word embeddings like Word2Vec or BERT).  
+  - You need to understand the context or relationships between words in sentences.  
+
+---  
+
+In short:  
+TF-IDF is **simple and effective** for many applications, but it lacks the depth to capture true meaning and relationships in text.
+
+---
+
+
+### **Step 1: Importing and Reading Data**
+```python
+messages = pd.read_csv('SpamClassifier-master/smsspamcollection/SMSSpamCollection', sep='\t', names=["label", "message"])
+```
+Here, we load a dataset of SMS messages labeled as either **ham (not spam)** or **spam**. Each row has:
+- **Label**: Indicates if the message is spam or not.
+- **Message**: The text of the SMS.
+
+For simplicity, consider the following **example dataset**:
+| **Label** | **Message**          |
+|-----------|----------------------|
+| ham       | Hello, how are you?  |
+| spam      | Win $1000 now! Click the link. |
+| ham       | Let's catch up tomorrow. |
+| spam      | Claim your free prize. Call now. |
+
+---
+
+### **Step 2: Data Cleaning and Preprocessing**
+```python
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+```
+
+**What happens in this step?**
+- **Stopwords Removal**: Common words like "the," "is," "in," etc., are removed as they don't add meaning.  
+- **Lemmatization**: Words are reduced to their root forms (e.g., "running" → "run").
+- **Regex Cleaning**: Non-alphabetical characters (e.g., `$`, `1000`, `!`) are removed.
+
+For the example dataset:
+| **Original Message**       | **Cleaned Message**         |
+|-----------------------------|-----------------------------|
+| Hello, how are you?         | hello                      |
+| Win $1000 now! Click the link. | win click link            |
+| Let's catch up tomorrow.    | let catch tomorrow          |
+| Claim your free prize. Call now. | claim free prize call |
+
+**Python Implementation**:
+```python
+corpus = []
+for i in range(0, len(messages)):
+    review = re.sub('[^a-zA-Z]', ' ', messages['message'][i])  # Remove non-alphabet characters
+    review = review.lower()  # Convert to lowercase
+    review = review.split()  # Tokenize words
+    review = [wordlemmatize.lemmatize(word) for word in review if word not in stopwords.words('english')]  
+    review = ' '.join(review)  # Join back into a sentence
+    corpus.append(review)
+```
+
+---
+
+### **Step 3: Creating the TF-IDF Representation**
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+tfidf = TfidfVectorizer(max_features=100)  # Use the top 100 features
+X = tfidf.fit_transform(corpus).toarray()
+```
+
+**What happens here?**
+- `TfidfVectorizer` converts the cleaned text into a numerical matrix where:
+  - **Rows**: Messages in the dataset.
+  - **Columns**: Words (features) selected by `max_features=100`.
+  - **Values**: TF-IDF score for each word in a message.
+
+**TF-IDF Score Calculation**:
+- Words like "win" and "click" in spam messages will have **higher TF-IDF scores** since they are rare but important.
+- Words like "hello" in ham messages will have **lower scores** if they appear in many messages.
+
+---
+
+### **Example TF-IDF Representation**
+For the **example dataset**, the TF-IDF matrix might look like this:
+|          | **win** | **click** | **link** | **hello** | **prize** | **call** | **catch** | **tomorrow** |
+|----------|---------|-----------|----------|-----------|-----------|----------|------------|------------|
+| Message 1 | 0.0     | 0.0       | 0.0      | 0.7       | 0.0       | 0.0      | 0.0        | 0.0         |
+| Message 2 | 0.5     | 0.5       | 0.5      | 0.0       | 0.0       | 0.0      | 0.0        | 0.0         |
+| Message 3 | 0.0     | 0.0       | 0.0      | 0.0       | 0.0       | 0.0      | 0.7        | 0.7         |
+| Message 4 | 0.0     | 0.0       | 0.0      | 0.0       | 0.5       | 0.5      | 0.0        | 0.0         |
+
+---
+
+### **Interpreting the Output**
+- **Row 1 ("hello how are you")**: High TF-IDF score for "hello."
+- **Row 2 ("win click link")**: High scores for "win," "click," and "link," indicating spam-related keywords.
+- **Row 3 ("let catch tomorrow")**: High scores for "catch" and "tomorrow," reflecting the message content.
+- **Row 4 ("claim free prize call")**: High scores for "prize" and "call," capturing spam-related intent.
+
+---
+
+### **Final Output**
+The final matrix `X` contains these scores, representing each message numerically. This can now be fed into machine learning models for spam classification!
+
+---
